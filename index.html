@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Authentification Email/Password avec Firebase</title>
+  <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.15.0/firebase-auth-compat.js"></script>
+</head>
+<body>
+  <h1>Authentification Email/Password avec Firebase</h1>
+  <div id="auth-container">
+    <button onclick="location.href='login.html'">Se connecter</button>
+  </div>
+  <div id="data-container"></div>
+
+  <script>
+    // Importer les fonctions nécessaires depuis le SDK de Firebase
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
+import { getAnalytics } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-analytics.js";
+import { getAuth, signInWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-auth.js";
+
+// Configuration de votre application web Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyAzq0LsdEssEyGEKIdFgNsxTP0FGmwZYIU",
+    authDomain: "wifi-24532.firebaseapp.com",
+    projectId: "wifi-24532",
+    storageBucket: "wifi-24532.appspot.com",
+    messagingSenderId: "922684726790",
+    appId: "1:922684726790:web:06fa4ab85441b967daed87",
+    measurementId: "G-MEX7XTF0BG"
+};
+
+// Initialiser Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
+const auth = getAuth(app);
+
+    // Vérifie si l'utilisateur est connecté
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        // Utilisateur connecté
+        console.log('Utilisateur connecté:', user.uid);
+        document.getElementById('auth-container').innerHTML = `<p>Connecté en tant que ${user.email} <button onclick="signOut()">Se déconnecter</button></p>`;
+        loadDataFromGlitch(user.uid); // Charge la page de Glitch
+      } else {
+        // Utilisateur non connecté
+        console.log('Utilisateur non connecté');
+        document.getElementById('auth-container').innerHTML = `<button onclick="location.href='login.html'">Se connecter</button>`;
+        document.getElementById('data-container').innerHTML = ''; // Efface le contenu
+      }
+    });
+
+    // Fonction pour se déconnecter
+    function signOut() {
+      auth.signOut()
+        .then(() => {
+          // Déconnexion réussie
+          console.log('Déconnexion réussie');
+        })
+        .catch((error) => {
+          // Erreur de déconnexion
+          console.error('Erreur de déconnexion:', error.code, error.message);
+        });
+    }
+
+    // Fonction pour charger la page HTML de Glitch
+    function loadDataFromGlitch(uid) {
+      const apiKey = 'TA_CLE_API_GLITCH'; // Remplace avec ta clé API Glitch
+      const glitchApiUrl = `https://ton-projet-glitch.glitch.me/api/protected-page?uid=${uid}`; // Remplace l'URL
+
+      fetch(glitchApiUrl, {
+        headers: {
+          'X-API-KEY': apiKey // Envoie la clé API dans l'en-tête
+        }
+      })
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Erreur lors de la récupération de la page de Glitch');
+        }
+        return response.text(); // Récupère le code HTML
+      })
+      .then(html => {
+        // Insère le code HTML dans la page
+        document.getElementById('data-container').innerHTML = html;
+      })
+      .catch(error => {
+        console.error('Erreur:', error);
+      });
+    }
+  </script>
+</body>
+</html>
