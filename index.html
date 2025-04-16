@@ -13,23 +13,20 @@
   <div id="data-container"></div>
 
   <script>
+    // Configuration de votre application web Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyAzq0LsdEssEyGEKIdFgNsxTP0FGmwZYIU",
+      authDomain: "wifi-24532.firebaseapp.com",
+      projectId: "wifi-24532",
+      storageBucket: "wifi-24532.appspot.com",
+      messagingSenderId: "922684726790",
+      appId: "1:922684726790:web:06fa4ab85441b967daed87",
+      measurementId: "G-MEX7XTF0BG"
+    };
 
-
-// Configuration de votre application web Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyAzq0LsdEssEyGEKIdFgNsxTP0FGmwZYIU",
-    authDomain: "wifi-24532.firebaseapp.com",
-    projectId: "wifi-24532",
-    storageBucket: "wifi-24532.appspot.com",
-    messagingSenderId: "922684726790",
-    appId: "1:922684726790:web:06fa4ab85441b967daed87",
-    measurementId: "G-MEX7XTF0BG"
-};
-
-// Initialiser Firebase
-const app = initializeApp(firebaseConfig);
-const analytics = getAnalytics(app);
-const auth = getAuth(app);
+    // Initialiser Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
 
     // Vérifie si l'utilisateur est connecté
     auth.onAuthStateChanged(user => {
